@@ -21,25 +21,28 @@ void delete_list(struct Person **list);
 void load_addresses(FILE *file, struct Person **list);
 void display_file(struct Person *list);
 void add_to_list(struct Person **list, struct Person *person);
-void add_new_person(FILE *file);
+struct Person* insert(FILE *file);
 void read_file(char *file_path, struct Person **list);
+void insert_with_position(struct Person **list);
+void print_to_file(FILE *file, char *name, char *surname, char *email, char *number);
+void append_file(char *file_path, struct Person **list);
 
 
 FILE *open_file(char *file, char *mode);
 
 int main(void)
 {
+    int position;
+
     char address_file_path[30] = "addresses.csv";
     struct Person *list = NULL;
     FILE *address_file = NULL;
 
     read_file(address_file_path, &list);
 
-    address_file = open_file(address_file_path, "a");
+    append_file(address_file_path, &list);
 
-    add_new_person(address_file);
-
-    fclose(address_file);
+    
 
     read_file(address_file_path, &list);
 
@@ -56,14 +59,16 @@ void read_file(char *file_path, struct Person **list)
     fclose(address_file);
 }
 
-void append_file(char *file_path)
+void append_file(char *file_path, struct Person **list)
 {
     FILE *address_file = open_file(file_path, "a");
 
-    add_new_person(address_file);
+    insert(address_file);
+    //insert_with_position(list);
 
     fclose(address_file);
 }
+
 FILE *open_file(char *file, char *mode)
 {
     FILE *address_file = fopen(file, mode);
@@ -148,7 +153,7 @@ void display_file(struct Person *list)
     }
 }
 
-void add_new_person(FILE *file)
+struct Person* insert(FILE *file)
 {
     char name[30];
     char surname[30];
@@ -157,25 +162,58 @@ void add_new_person(FILE *file)
 
     printf("Enter Name:\n");
     scanf("%s", name);
+
     printf("Enter Surname:\n");
     scanf("%s", surname);
+
     printf("Enter Email:\n");
     scanf("%s", email);
+
     printf("Enter Number:\n");
     scanf("%s", number);
 
+    fprintf(file, "%s, %s, %s, %s\n", name, surname, email, number);
+
+    return create_node(name, surname, email, number);
+}
+
+void insert_with_position(struct Person **list)
+{
+    int position = 0;
+    printf("Enter Position:\n");
+    scanf("%d", &position);
+
+    //struct Person *new_node = insert();
+
+    int i = 0;
+    struct Person *temp = *list;
+
+    while(temp != NULL) {
+
+        if(i == position - 1) {
+
+           // new_node->next = temp->next;
+          //  temp->next = new_node;
+
+            break;
+        }
+
+        i++;
+        temp = temp->next;
+    }
+
+}
+
+
+void print_to_file(FILE *file, char *name, char *surname, char *email, char *number)
+{
     fprintf(file, "%s,%s,%s,%s\n",
         name,
         surname,
         email,
         number);
-    
-    return;
 }
-
 /*
-    Add new address to the book (to the end)
-
     Add new address indicating the position where to put it
 
     Delete address indicating its position in the book
