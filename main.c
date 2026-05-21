@@ -3,10 +3,35 @@
 #include <string.h>
 #include "linked_list.h"
 
+Person *input_person(void)
+{
+    char name[30];
+    char surname[30];
+    char email[30];
+    char number[30];
+
+    printf("Enter name: ");
+    scanf("%s", name);
+
+    printf("Enter surname: ");
+    scanf("%s", surname);
+
+    printf("Enter email: ");
+    scanf("%s", email);
+
+    printf("Enter phone number: ");
+    scanf("%s", number);
+
+    return create_person(name, surname, email, number);
+}
+
 int main() 
 {
-
+    Person *list = NULL;
     int choice;
+
+    load_from_csv(&list);
+
     do{
         printf("\n===== ADDRESS BOOK MENU =====\n");
         printf("1. Display all records\n");
@@ -19,14 +44,25 @@ int main()
         printf("0. Exit\n");
         printf("Choose: ");
 
+        scanf("%d", &choice);
+        getchar();
+
         if (choice == 1){
-            //display();
+            display(list);
         }
         else if (choice == 2){
-            //insert();
+            Person *new_person = input_person();
+            insert(&list, new_person);
+            load_to_csv(new_person);
         }
         else if (choice == 3){
-            //insert_with_position();
+            int position;
+
+            printf("Enter position:");
+            scanf("%d", &position);
+
+            Person *new_person = input_person();
+            insert_with_position(&list, new_person, position);
         }
         else if (choice == 4){
             //delete_with_position();
@@ -53,10 +89,6 @@ int main()
 }
 
 /*
-Display all records in the address book
-
-Add new address to the book (to the end)
-
 Add new address indicating the position where to put it
 
 Delete address indicating its position in the book
