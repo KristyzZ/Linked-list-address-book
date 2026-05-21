@@ -75,7 +75,7 @@ int main()
             save_all_to_csv(list);
         }
         else if (choice == 5){
-            //delete_all();
+            delete_all(&list);
         }
         else if (choice == 6){
             //find_by_position();
@@ -96,8 +96,6 @@ int main()
 }
 
 /*
-Delete address indicating its position in the book
-
 Delete whole address book
 
 Find address by position

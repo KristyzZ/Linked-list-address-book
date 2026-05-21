@@ -6,6 +6,21 @@
 
 #define DELIMITER ","
 
+
+void delete_all(Person **head)
+{
+    Person *current = *head;
+
+    while (current != NULL){
+        Person *temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    *head = NULL;
+    printf("Address book deleted.\n");
+}
+
 void delete_with_position(Person **head, int position)
 {
     if (*head == NULL) {
