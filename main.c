@@ -66,7 +66,13 @@ int main()
             save_all_to_csv(list);
         }
         else if (choice == 4){
-            //delete_with_position();
+            int position;
+
+            printf("Enter position:");
+            scanf("%d", &position);
+
+            delete_with_position(&list, position);
+            save_all_to_csv(list);
         }
         else if (choice == 5){
             //delete_all();
@@ -90,8 +96,6 @@ int main()
 }
 
 /*
-Add new address indicating the position where to put it
-
 Delete address indicating its position in the book
 
 Delete whole address book

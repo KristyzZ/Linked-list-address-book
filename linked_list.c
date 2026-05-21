@@ -6,6 +6,37 @@
 
 #define DELIMITER ","
 
+void delete_with_position(Person **head, int position)
+{
+    if (*head == NULL) {
+        printf("Address book is empty.\n");
+        return;
+    }
+
+    Person *temp = *head;
+
+    if (position <= 1){
+        *head = (*head)->next;
+        free(temp);
+        printf("Record deleted.\n");
+        return;
+    }
+
+    Person *previous = *head;
+
+    for (int i = 1; temp != NULL && i < position; i++) {
+        previous = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL){
+        printf("Invalid position.\n");
+    }
+
+    previous->next = temp->next;
+    free(temp);
+    printf("Record deleted.\n");
+}
 
 void display(Person *head)
 {
@@ -151,7 +182,7 @@ void save_all_to_csv(Person *head)
 
     snprintf(path, sizeof(path), "%s/addresses.csv", home);
 
-    FILE *file = fopen(path, "w"); // "w" perrašo visą failą
+    FILE *file = fopen(path, "w");
 
     if (file == NULL) {
         printf("Could not open addresses.csv for writing.\n");

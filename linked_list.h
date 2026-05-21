@@ -18,5 +18,6 @@ void save_all_to_csv(Person *head);
 
 void display(Person *head);
 void insert_with_position(Person **head, Person* new_person, int position);
+void delete_with_position(Person **head, int position);
 
 #endif
