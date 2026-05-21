@@ -63,6 +63,7 @@ int main()
 
             Person *new_person = input_person();
             insert_with_position(&list, new_person, position);
+            save_all_to_csv(list);
         }
         else if (choice == 4){
             //delete_with_position();

@@ -138,3 +138,30 @@ void load_from_csv(Person **head)
     }
     fclose(file);
 }
+
+void save_all_to_csv(Person *head)
+{
+    char path[512];
+    char *home = getenv("HOME");
+
+    if (home == NULL) {
+        printf("Could not find home directory.\n");
+        return;
+    }
+
+    snprintf(path, sizeof(path), "%s/addresses.csv", home);
+
+    FILE *file = fopen(path, "w"); // "w" perrašo visą failą
+
+    if (file == NULL) {
+        printf("Could not open addresses.csv for writing.\n");
+        return;
+    }
+
+    while (head != NULL) {
+        fprintf(file, "%s,%s,%s,%s\n", head->name, head->surname, head->email, head->number);
+        head = head->next;
+    }
+
+    fclose(file);
+}

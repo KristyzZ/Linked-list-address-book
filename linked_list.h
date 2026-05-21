@@ -14,6 +14,7 @@ Person *create_person(char *name, char *surname, char *email, char *number);
 
 void load_from_csv(Person **head);
 void load_to_csv(Person *new_person);
+void save_all_to_csv(Person *head);
 
 void display(Person *head);
 void insert_with_position(Person **head, Person* new_person, int position);
