@@ -12,16 +12,15 @@ typedef struct Person {
 void insert(Person **head, Person* new_person);
 Person *create_person(const char *name, const char *surname, const char *email, const char *number);
 
-void load_from_csv(Person **head);
-void load_to_csv(Person *new_person);
-void save_all_to_csv(Person *head);
-
-void display(Person *head);
+int display(Person *head);
 void insert_with_position(Person **head, Person* new_person, int position);
-void delete_with_position(Person **head, int position);
-void delete_all(Person **head);
+int delete_with_position(Person **head, int position);
+int delete_all(Person **head);
 
-void find_by_position(Person *head, int position);
-void search(Person *head, const char *query);
+int find_by_position(Person *head, int position);
+int search(Person *head, const char *query);
+void print_node(Person *head, int position);
+
+const char *get_error_message(int error_code);
 
 #endif

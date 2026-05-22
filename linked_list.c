@@ -4,10 +4,23 @@
 #include <errno.h>
 #include "linked_list.h"
 
+#define SUCCESS 0
+#define ERROR_EMPTY_LIST 1
+#define ERROR_INVALID_POSITION 2
+#define ERROR_DISPLAY_FAILED 3
+#define ERROR_NULL_POINTER 4
+#define ERROR_NO_RECORD 5
 
-#define DELIMITER ","
+void print_node(Person *head, int position)
+{
+    printf("\nPosition #%d\n", position);
+    printf("Name: %s\n", head->name);
+    printf("Surname: %s\n", head->surname);
+    printf("Email: %s\n", head->email);
+    printf("Number: %s\n", head->number);
+}
 
-void search(Person *head, const char *query)
+int search(Person *head, const char *query)
 {
     int found = 0;
     int position = 1;
@@ -18,11 +31,7 @@ void search(Person *head, const char *query)
             strcmp(head->email, query) == 0 || 
             strcmp(head->number, query) == 0
         ){
-            printf("\nPosition #%d\n", position);
-            printf("Name: %s\n", head->name);
-            printf("Surname: %s\n", head->surname);
-            printf("Email: %s\n", head->email);
-            printf("Number: %s\n", head->number);
+            print_node(head, position);
             found = 1;
         }
         head = head->next;
@@ -30,25 +39,33 @@ void search(Person *head, const char *query)
     }
     
     if (!found) {
-        printf("No matching records found.\n");
+        return ERROR_NO_RECORD;
     }
+
+    return SUCCESS;
 }
 
-void find_by_position(Person *head, int position)
+int find_by_position(Person *head, int position)
 {
-    for (int i = 1; i < position; i++){
+    for (int i = 1; head != NULL && i < position; i++){
         head = head->next;
     }
 
-    printf("\nPosition #%d\n", position);
-    printf("Name: %s\n", head->name);
-    printf("Surname: %s\n", head->surname);
-    printf("Email: %s\n", head->email);
-    printf("Number: %s\n", head->number);
+    if (head == NULL) {
+        return ERROR_INVALID_POSITION;
+    }
+
+    print_node(head, position);
+    
+    return SUCCESS;
 }
 
-void delete_all(Person **head)
+int delete_all(Person **head)
 {
+    if (head == NULL) {
+        return ERROR_NULL_POINTER;
+    }
+
     Person *current = *head;
 
     while (current != NULL){
@@ -58,14 +75,13 @@ void delete_all(Person **head)
     }
 
     *head = NULL;
-    printf("Address book deleted.\n");
+    return SUCCESS;
 }
 
-void delete_with_position(Person **head, int position)
+int delete_with_position(Person **head, int position)
 {
     if (*head == NULL) {
-        printf("Address book is empty.\n");
-        return;
+        return ERROR_EMPTY_LIST;
     }
 
     Person *temp = *head;
@@ -73,8 +89,7 @@ void delete_with_position(Person **head, int position)
     if (position <= 1){
         *head = (*head)->next;
         free(temp);
-        printf("Record deleted.\n");
-        return;
+        return SUCCESS;
     }
 
     Person *previous = NULL;
@@ -85,35 +100,31 @@ void delete_with_position(Person **head, int position)
     }
 
     if (temp == NULL){
-    printf("Invalid position\n");
-    return;
+        return ERROR_INVALID_POSITION;
     }
 
     previous->next = temp->next;
     free(temp);
-    printf("Record deleted.\n");
+
+    return SUCCESS;
 }
 
-void display(Person *head)
+int display(Person *head)
 {
     if (head == NULL){
-        errno = ENODATA;
-        perror("Display failed");
-        return;
+        return ERROR_DISPLAY_FAILED;
     }
 
     int position = 1;
 
     while (head != NULL) {
-        printf("\nPosition #%d\n", position);
-        printf("Name: %s\n", head->name);
-        printf("Surname: %s\n", head->surname);
-        printf("Email: %s\n", head->email);
-        printf("Number: %s\n", head->number);
+        print_node(head, position);
 
         head = head->next;
         position++;
     }
+
+    return SUCCESS;
 }
 
 void insert(Person **head, Person* new_person)
@@ -166,92 +177,4 @@ Person *create_person(const char *name, const char *surname, const char *email, 
     new_person->next = NULL;
 
     return new_person;
-}
-
-void load_to_csv(Person *new_person)
-{
-    char path[512];
-    const char *home = getenv("HOME");
-
-    if(home == NULL){
-        perror("Failed to open file");
-        return;
-    }
-
-    snprintf(path, sizeof(path), "%s/addresses.csv", home);
-    
-    FILE *file = fopen(path, "a");
-
-    if (file == NULL) {
-        printf("addresses.csv not found. Continuing without default records.\n");
-        return;
-    }
-
-    fprintf(file, "%s,%s,%s,%s\n", new_person->name, new_person->surname, new_person->email, new_person->number);
-
-    fclose(file);
-}
-
-void load_from_csv(Person **head)
-{
-    char path[512];
-    const char *home = getenv("HOME");
-
-    if(home == NULL){
-        perror("Failed to open file");
-        return;
-    }
-
-    snprintf(path, sizeof(path), "%s/addresses.csv", home);
-    
-    FILE *file = fopen(path, "r");
-
-    if (file == NULL) {
-        printf("addresses.csv not found. Continuing without default records.\n");
-        return;
-    }
-
-    char line[256];
-
-    while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = '\0';
-
-        char *name = strtok(line, DELIMITER);
-        char *surname = strtok(NULL, DELIMITER);
-        char *email = strtok(NULL, DELIMITER);
-        char *number = strtok(NULL, DELIMITER);
-        
-        if (name && surname && email && number){
-            Person *new_person = create_person(name, surname, email, number);
-            insert(head, new_person);
-        }
-    }
-    fclose(file);
-}
-
-void save_all_to_csv(Person *head)
-{
-    char path[512];
-    const char *home = getenv("HOME");
-
-    if (home == NULL) {
-        perror("Failed to find path");
-        return;
-    }
-
-    snprintf(path, sizeof(path), "%s/addresses.csv", home);
-
-    FILE *file = fopen(path, "w");
-
-    if (file == NULL) {
-        perror("Failed to open file");
-        return;
-    }
-
-    while (head != NULL) {
-        fprintf(file, "%s,%s,%s,%s\n", head->name, head->surname, head->email, head->number);
-        head = head->next;
-    }
-
-    fclose(file);
 }
