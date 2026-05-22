@@ -78,7 +78,12 @@ int main()
             delete_all(&list);
         }
         else if (choice == 6){
-            //find_by_position();
+            int position;
+
+            printf("Enter position:");
+            scanf("%d", &position);
+
+            find_by_position(&list, position);
         }
         else if (choice == 7){
             //search();
@@ -96,8 +101,6 @@ int main()
 }
 
 /*
-Delete whole address book
-
 Find address by position
 
 Find addressess by name, surname, email or phone number

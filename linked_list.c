@@ -7,6 +7,21 @@
 #define DELIMITER ","
 
 
+void find_by_position(Person **head, int position)
+{
+    Person *temp = *head;
+
+    for (int i = 1; i < position; i++){
+        temp = temp->next;
+    }
+
+    printf("\nPosition #%d\n", position);
+    printf("Name: %s\n", temp->name);
+    printf("Surname: %s\n", temp->surname);
+    printf("Email: %s\n", temp->email);
+    printf("Number: %s\n", temp->number);
+}
+
 void delete_all(Person **head)
 {
     Person *current = *head;
@@ -37,7 +52,7 @@ void delete_with_position(Person **head, int position)
         return;
     }
 
-    Person *previous = *head;
+    Person *previous = NULL;
 
     for (int i = 1; temp != NULL && i < position; i++) {
         previous = temp;
