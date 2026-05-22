@@ -1,7 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include "linked_list.h"
+
+Person *global_list = NULL;
+
+void signal_handler(int signal)
+{
+    printf("Received signal: %d\n", signal);
+
+    cleanup();
+
+    exit(0);
+}
+
+void cleanup(void)
+{
+    save_all_to_csv(global_list);
+    delete_all(&global_list);
+}
 
 Person *input_person(void)
 {
@@ -25,8 +43,21 @@ Person *input_person(void)
     return create_person(name, surname, email, number);
 }
 
+int get_pos(void){
+    int position;
+
+    printf("Enter position:");
+    scanf("%d", &position);
+
+    return position;
+}
+
 int main() 
 {
+    signal(SIGINT,signal_handler);
+    signal(SIGTERM,signal_handler);
+    signal(SIGQUIT,signal_handler);
+
     Person *list = NULL;
     int choice;
 
@@ -56,20 +87,14 @@ int main()
             load_to_csv(new_person);
         }
         else if (choice == 3){
-            int position;
-
-            printf("Enter position:");
-            scanf("%d", &position);
+            int position = get_pos();
 
             Person *new_person = input_person();
             insert_with_position(&list, new_person, position);
             save_all_to_csv(list);
         }
         else if (choice == 4){
-            int position;
-
-            printf("Enter position:");
-            scanf("%d", &position);
+            int position = get_pos();
 
             delete_with_position(&list, position);
             save_all_to_csv(list);
@@ -78,10 +103,7 @@ int main()
             delete_all(&list);
         }
         else if (choice == 6){
-            int position;
-
-            printf("Enter position:");
-            scanf("%d", &position);
+            int position = get_pos();
 
             find_by_position(list, position);
         }
@@ -99,6 +121,8 @@ int main()
             printf("Invalid Choice");
         }
     } while (choice != 0);
+
+    cleanup();
 
     return 0;
 }
