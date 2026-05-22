@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include "linked_list.h"
 
 
@@ -96,7 +97,8 @@ void delete_with_position(Person **head, int position)
 void display(Person *head)
 {
     if (head == NULL){
-        printf("List is empty\n");
+        errno = ENODATA;
+        perror("Display failed");
         return;
     }
 
@@ -153,7 +155,7 @@ Person *create_person(char *name, char *surname, char *email, char *number)
     Person *new_person = malloc(sizeof(Person));
 
     if (new_person == NULL){
-        printf("Memory allocation failed.\n");
+        perror("malloc");
         return NULL;
     }
 
@@ -172,7 +174,7 @@ void load_to_csv(Person *new_person)
     char *home = getenv("HOME");
 
     if(home == NULL){
-        printf("Could not find home directory.\n");
+        perror("Failed to open file");
         return;
     }
 
@@ -196,7 +198,7 @@ void load_from_csv(Person **head)
     char *home = getenv("HOME");
 
     if(home == NULL){
-        printf("Could not find home directory.\n");
+        perror("Failed to open file");
         return;
     }
 
@@ -233,7 +235,7 @@ void save_all_to_csv(Person *head)
     char *home = getenv("HOME");
 
     if (home == NULL) {
-        printf("Could not find home directory.\n");
+        perror("Failed to find path");
         return;
     }
 
@@ -242,7 +244,7 @@ void save_all_to_csv(Person *head)
     FILE *file = fopen(path, "w");
 
     if (file == NULL) {
-        printf("Could not open addresses.csv for writing.\n");
+        perror("Failed to open file");
         return;
     }
 
