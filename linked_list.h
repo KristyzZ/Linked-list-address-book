@@ -10,7 +10,7 @@ typedef struct Person {
 } Person;
 
 void insert(Person **head, Person* new_person);
-Person *create_person(char *name, char *surname, char *email, char *number);
+Person *create_person(const char *name, const char *surname, const char *email, const char *number);
 
 void load_from_csv(Person **head);
 void load_to_csv(Person *new_person);
@@ -22,6 +22,6 @@ void delete_with_position(Person **head, int position);
 void delete_all(Person **head);
 
 void find_by_position(Person *head, int position);
-void search(Person *head, char *query);
+void search(Person *head, const char *query);
 
 #endif

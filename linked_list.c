@@ -7,7 +7,7 @@
 
 #define DELIMITER ","
 
-void search(Person *head, char *query)
+void search(Person *head, const char *query)
 {
     int found = 0;
     int position = 1;
@@ -33,7 +33,6 @@ void search(Person *head, char *query)
         printf("No matching records found.\n");
     }
 }
-
 
 void find_by_position(Person *head, int position)
 {
@@ -86,7 +85,8 @@ void delete_with_position(Person **head, int position)
     }
 
     if (temp == NULL){
-        printf("Invalid position.\n");
+    printf("Invalid position\n");
+    return;
     }
 
     previous->next = temp->next;
@@ -150,7 +150,7 @@ void insert_with_position(Person **head, Person* new_person, int position)
     current->next = new_person;
 }
 
-Person *create_person(char *name, char *surname, char *email, char *number)
+Person *create_person(const char *name, const char *surname, const char *email, const char *number)
 {
     Person *new_person = malloc(sizeof(Person));
 
@@ -171,7 +171,7 @@ Person *create_person(char *name, char *surname, char *email, char *number)
 void load_to_csv(Person *new_person)
 {
     char path[512];
-    char *home = getenv("HOME");
+    const char *home = getenv("HOME");
 
     if(home == NULL){
         perror("Failed to open file");
@@ -195,7 +195,7 @@ void load_to_csv(Person *new_person)
 void load_from_csv(Person **head)
 {
     char path[512];
-    char *home = getenv("HOME");
+    const char *home = getenv("HOME");
 
     if(home == NULL){
         perror("Failed to open file");
@@ -232,7 +232,7 @@ void load_from_csv(Person **head)
 void save_all_to_csv(Person *head)
 {
     char path[512];
-    char *home = getenv("HOME");
+    const char *home = getenv("HOME");
 
     if (home == NULL) {
         perror("Failed to find path");
