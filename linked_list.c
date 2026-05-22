@@ -6,20 +6,45 @@
 
 #define DELIMITER ","
 
-
-void find_by_position(Person **head, int position)
+void search(Person *head, char *query)
 {
-    Person *temp = *head;
+    int found = 0;
+    int position = 1;
+    while (head != NULL){
+        if (
+            strcmp(head->name, query) == 0 || 
+            strcmp(head->surname, query) == 0 || 
+            strcmp(head->email, query) == 0 || 
+            strcmp(head->number, query) == 0
+        ){
+            printf("\nPosition #%d\n", position);
+            printf("Name: %s\n", head->name);
+            printf("Surname: %s\n", head->surname);
+            printf("Email: %s\n", head->email);
+            printf("Number: %s\n", head->number);
+            found = 1;
+        }
+        head = head->next;
+        position++;
+    }
+    
+    if (!found) {
+        printf("No matching records found.\n");
+    }
+}
 
+
+void find_by_position(Person *head, int position)
+{
     for (int i = 1; i < position; i++){
-        temp = temp->next;
+        head = head->next;
     }
 
     printf("\nPosition #%d\n", position);
-    printf("Name: %s\n", temp->name);
-    printf("Surname: %s\n", temp->surname);
-    printf("Email: %s\n", temp->email);
-    printf("Number: %s\n", temp->number);
+    printf("Name: %s\n", head->name);
+    printf("Surname: %s\n", head->surname);
+    printf("Email: %s\n", head->email);
+    printf("Number: %s\n", head->number);
 }
 
 void delete_all(Person **head)
@@ -140,6 +165,7 @@ Person *create_person(char *name, char *surname, char *email, char *number)
 
     return new_person;
 }
+
 void load_to_csv(Person *new_person)
 {
     char path[512];
@@ -163,6 +189,7 @@ void load_to_csv(Person *new_person)
 
     fclose(file);
 }
+
 void load_from_csv(Person **head)
 {
     char path[512];

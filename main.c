@@ -83,13 +83,16 @@ int main()
             printf("Enter position:");
             scanf("%d", &position);
 
-            find_by_position(&list, position);
+            find_by_position(list, position);
         }
         else if (choice == 7){
-            //search();
+            char query[50];
+
+            printf("Enter query:");
+            scanf("%s", query);
+            search(list, query);
         }
         else if (choice == 0){
-            //exit
             printf("Program closed.\n");
         }
         else {
@@ -101,7 +104,5 @@ int main()
 }
 
 /*
-Find address by position
-
 Find addressess by name, surname, email or phone number
 */
