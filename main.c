@@ -4,7 +4,13 @@
 #include <signal.h>
 #include "linked_list.h"
 
-Person *global_list = NULL;
+Person *list = NULL;
+
+void cleanup(void)
+{
+    save_all_to_csv(list);
+    delete_all(&list);
+}
 
 void signal_handler(int signal)
 {
@@ -15,39 +21,46 @@ void signal_handler(int signal)
     exit(0);
 }
 
-void cleanup(void)
-{
-    save_all_to_csv(global_list);
-    delete_all(&global_list);
+void read_string(char *buffer, int size) {
+    fgets(buffer, size, stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
 }
 
 Person *input_person(void)
 {
-    char name[30];
-    char surname[30];
-    char email[30];
-    char number[30];
+    char name[100];
+    char surname[100];
+    char email[100];
+    char number[100];
 
     printf("Enter name: ");
-    scanf("%s", name);
+    read_string(name, sizeof(name));
+
 
     printf("Enter surname: ");
-    scanf("%s", surname);
+    read_string(surname, sizeof(surname));
+
 
     printf("Enter email: ");
-    scanf("%s", email);
+    read_string(email, sizeof(email));
+
 
     printf("Enter phone number: ");
-    scanf("%s", number);
+    read_string(number, sizeof(name));
+
 
     return create_person(name, surname, email, number);
 }
 
 int get_pos(void){
+    char buffer[20];
     int position;
 
-    printf("Enter position:");
-    scanf("%d", &position);
+    printf("Enter position: ");
+
+    read_string(buffer, sizeof(buffer));
+
+    position = atoi(buffer);
 
     return position;
 }
@@ -58,7 +71,6 @@ int main()
     signal(SIGTERM,signal_handler);
     signal(SIGQUIT,signal_handler);
 
-    Person *list = NULL;
     int choice;
 
     load_from_csv(&list);
@@ -75,8 +87,11 @@ int main()
         printf("0. Exit\n");
         printf("Choose: ");
 
-        scanf("%d", &choice);
-        getchar();
+        char buffer[20];
+
+        read_string(buffer, sizeof(buffer));
+
+        choice = atoi(buffer);
 
         if (choice == 1){
             display(list);
@@ -111,7 +126,7 @@ int main()
             char query[50];
 
             printf("Enter query:");
-            scanf("%s", query);
+            read_string(query, sizeof(query));
             search(list, query);
         }
         else if (choice == 0){
@@ -126,7 +141,3 @@ int main()
 
     return 0;
 }
-
-/*
-Find addressess by name, surname, email or phone number
-*/
