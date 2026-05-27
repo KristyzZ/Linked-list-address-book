@@ -1,13 +1,22 @@
-.PHONY: all clean run
+.PHONY: all clean run src lib clean-src clean-lib
 
-all:
+all: lib src
+
+lib:
 	$(MAKE) -C lib
+
+src:
 	$(MAKE) -C src
 
-run: all
-	$(MAKiE) -C src run
 
-clean:
-	$(MAKE) -C src clean
-	$(MAKE) -C lib clean
+run: all
+	./address_book
+
+clean: clean-src clean-lib
 	rm -f address_book
+
+clean-src:
+	$(MAKE) -C src clean
+
+clean-lib:
+	$(MAKE) -C lib clean
