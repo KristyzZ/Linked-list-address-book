@@ -3,3 +3,12 @@ main
 .vscode/
 addresses.csv
 README.md
+
+# lib build files
+lib/*.o
+lib/*.d
+lib/*.so
+
+# src build files
+src/*.o
+src/*.d

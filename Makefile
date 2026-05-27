@@ -1,24 +1,13 @@
-CFLAGS := -Wall -Wextra -Wpedantic -std=c11 -O2
-LDFLAGS :=
-
-TARGET_EXEC := address_book
-
-SRCS := main.c linked_list.c
-OBJS := $(SRCS:.c=.o)
-DEPS := $(OBJS:.o=.d)
-
 .PHONY: all clean run
 
-all: $(TARGET_EXEC)
+all:
+	$(MAKE) -C lib
+	$(MAKE) -C src
 
-$(TARGET_EXEC): $(OBJS)
-	$(CC) $(OBJS) $(LDFLAGS) -o $@
-
-%.o: %.c
-	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
-
--include $(DEPS)
-
+run: all
+	$(MAKiE) -C src run
 
 clean:
-	rm -f $(OBJS) $(DEPS) $(TARGET_EXEC)
+	$(MAKE) -C src clean
+	$(MAKE) -C lib clean
+	rm -f address_book
