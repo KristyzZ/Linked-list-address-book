@@ -4,11 +4,7 @@ main
 addresses.csv
 README.md
 
-# lib build files
-lib/*.o
-lib/*.d
-lib/*.so
+*.o
+*.d
+*.so
 
-# src build files
-src/*.o
-src/*.d
